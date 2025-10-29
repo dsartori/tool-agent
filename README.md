@@ -1,21 +1,20 @@
 # Tool Agent Demo - AI with Tool Chaining
 
-A simplified demonstration of AI tool chaining for Hackforge. This minimal CLI shows how AI assistants can use external tools to perform complex tasks through multi-round conversations.
+A simple demonstration of AI tool chaining for Hackforge. This minimal CLI shows how AI agents use external tools to perform complex tasks through multi-round conversations.
 
 ## Features
 
-- 🤖 **OpenAI Integration** - Connects to OpenAI API for intelligent responses
+- 🤖 **LLM Integration** - Connects to any OpenAI-compatible API
 - 🛠️ **Tool Calling** - AI can call external tools to get real-time information
 - 🔗 **Tool Chaining** - Multiple rounds of tool usage for complex tasks
 - 📊 **Round Management** - Simple round limits with progress indicators
 - 💬 **Interactive CLI** - Command-line interface with stdin support
-- ⚙️ **Simple Configuration** - JSON-based configuration
 
 ## Included Tools
 
 1. **File Reader** - Read and analyze text files
-2. **Web Search** - Search the web using DuckDuckGo (ddgs)
-3. **Web Fetch** - Fetch and extract content from web pages
+2. **Web Search** - Search the web 
+3. **Web Fetch** - Fetch and extract web content
 4. **Calculator** - Perform mathematical calculations
 
 ## Quick Start
@@ -110,54 +109,12 @@ Edit `config.json` to customize the demo:
 
 ```json
 {
-  "model": "gpt-3.5-turbo",           // OpenAI model to use
+  "model": "gpt-3.5-turbo",           // LLM to use
   "temperature": 0.7,                  // 0.0 = deterministic, 1.0 = creative
   "system_prompt": "You are...",       // AI behavior instructions
   "max_rounds": 5                      // Maximum conversation rounds
 }
 ```
-
-### Alternative Models
-```json
-{
-  "model": "gpt-4",
-  "temperature": 0.5,
-  "system_prompt": "You are an expert AI assistant...",
-  "max_rounds": 8
-}
-```
-
-### Custom OpenAI-Compatible Endpoints
-```json
-{
-  "model": "claude-3-haiku",
-  "temperature": 0.7,
-  "system_prompt": "You are Claude...",
-  "max_rounds": 5
-}
-```
-
-## Tech Talk Talking Points
-
-### 1. Tool Calling Architecture
-- Show how the AI receives tool schemas
-- Demonstrate function calling with parameters
-- Explain the request/response cycle
-
-### 2. Round Management
-- Demonstrate multi-round conversations
-- Show progress indicators
-- Explain loop detection and safety
-
-### 3. Tool Chaining
-- Show how tools can be used sequentially
-- Demonstrate how AI synthesizes results
-- Explain the power of combining tools
-
-### 4. Security & Safety
-- Path validation in file reader
-- Input sanitization in calculator
-- Round limits to prevent infinite loops
 
 ## File Structure
 
@@ -168,7 +125,7 @@ demo/
 └── README.md          # This file
 ```
 
-All functionality is contained in the single `tool-agent.py` file for easy portability and understanding.
+All functionality is contained in the single `tool-agent.py`.
 
 ## Command Reference
 
@@ -230,4 +187,4 @@ Then add it to the tools dictionary in `PinloomDemo.__init__()`.
 
 ## License
 
-This demo is for educational purposes. Feel free to use and modify for your tech talks and presentations.
+MIT 

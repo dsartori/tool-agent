@@ -139,7 +139,6 @@ class WebSearchTool(SimpleTool):
             return "Error: No search query provided"
         
         try:
-            # Use ddgs (new name for duckduckgo-search) for more reliable search
             try:
                 from ddgs import DDGS
             except ImportError:
