@@ -154,6 +154,18 @@ Arguments:
 
 ## Extending the Demo
 
+### Limitations
+
+This demo is intentionally minimal. Be aware of these limitations:
+
+- Tool Reliability: No retries or fallbacks if a tool fails. 
+- Security: No input validation or rate limiting.
+- Cost Control: No token or cost tracking. 
+- Configuration: Tools are hard-coded. 
+- Observability: No logging or metrics. 
+
+### Adding Tools
+
 To add new tools, create a class inheriting from `SimpleTool`:
 
 ```python
@@ -183,7 +195,7 @@ class MyTool(SimpleTool):
         }
 ```
 
-Then add it to the tools dictionary in `PinloomDemo.__init__()`.
+Then add it to the tools dictionary in `ToolAgent.__init__()`.
 
 ## License
 
