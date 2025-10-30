@@ -4,7 +4,6 @@ Simple Tool Validation Script
 ============================
 
 Lightweight validation for tool-agent tools to quickly identify issues.
-Run this script to verify all tools are working properly before demos.
 """
 
 import sys
@@ -12,7 +11,6 @@ import os
 import tempfile
 from typing import Dict, Tuple, Any
 
-# Import tool classes from the main script
 # Note: Using importlib to handle the hyphenated filename
 import importlib.util
 import importlib
