@@ -43,16 +43,16 @@ export LLM_BASE_URL="https://api.openai.com/v1"
 
 ```bash
 # Interactive mode (default)
-python tool-agent.py
+python main.py
 
 # Single message mode
-python tool-agent.py "Read the README.md file and summarize it"
+python main.py "Read the README.md file and summarize it"
 
 # Using stdin
-echo "Calculate 25 * 4 + 10" | python tool-agent.py
+echo "Calculate 25 * 4 + 10" | python main.py
 
 # Custom config file
-python tool-agent.py --config my-config.json "Search for AI news"
+python main.py --config my-config.json "Search for AI news"
 ```
 
 
@@ -72,13 +72,16 @@ Edit `config.json` to customize the demo:
 ## File Structure
 
 ```
-demo/
-├── tool-agent.py    # Main script (300 lines)
-├── config.json        # Configuration file
-└── README.md          # This file
+tool-agent/
+├── main.py              # Main entry point
+├── tool_agent.py         # ToolAgent class
+├── simple_tool.py       # Base tool class and implementations
+├── validate_tools.py   # Validation utilities
+├── config.json          # Configuration file
+└── README.md            # Documentation
 ```
 
-All functionality is contained in `tool-agent.py`.
+All functionality is contained in the modular files shown above.
 
 ## Command Reference
 
@@ -104,6 +107,26 @@ Arguments:
 2. **Argument** - Pass message as command line argument
 3. **Stdin** - Pipe input from other commands
 4. **File** - Redirect file content to stdin
+
+## Using as a Module
+
+Importing ToolAgent as a library in other programs:
+
+```python
+from tool_agent import ToolAgent
+from simple_tool import FileReaderTool, WebSearchTool
+
+# Create agent instance
+agent = ToolAgent("config.json")
+
+# Use programmatically
+response = agent.chat("Search for Python tutorials")
+print(response)
+
+# Access tools directly
+file_tool = FileReaderTool()
+content = file_tool.execute({"path": "example.txt"})
+```
 
 ## Extending the Demo
 
@@ -152,4 +175,4 @@ Then add it to the tools dictionary in `ToolAgent.__init__()`.
 
 ## License
 
-MIT 
+MIT
