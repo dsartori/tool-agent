@@ -10,7 +10,6 @@ Features: OpenAI integration, tool calls, round management, stdin input.
 import json
 import sys
 import os
-import subprocess
 import argparse
 from typing import Dict, List, Any, Optional
 try:
