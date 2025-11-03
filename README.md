@@ -43,65 +43,18 @@ export LLM_BASE_URL="https://api.openai.com/v1"
 
 ```bash
 # Interactive mode (default)
-python tool-agent.py
+python main.py
 
 # Single message mode
-python tool-agent.py "Read the README.md file and summarize it"
+python main.py "Read the README.md file and summarize it"
 
 # Using stdin
-echo "Calculate 25 * 4 + 10" | python tool-agent.py
+echo "Calculate 25 * 4 + 10" | python main.py
 
 # Custom config file
-python tool-agent.py --config my-config.json "Search for AI news"
+python main.py --config my-config.json "Search for AI news"
 ```
 
-## Demo Examples
-
-### Example 1: File Analysis
-```bash
-> Read the config.json file and explain the settings
-🔄 Round 1/5: Thinking...
-🔄 Round 1/5: Executing tools...
-  🛠️  file_reader: config.json
-🔄 Round 2/5: Thinking...
-✅ Complete!
-
-The config.json file contains these settings:
-- Model: gpt-3.5-turbo
-- Temperature: 0.7 (moderate creativity)
-- Max rounds: 5 (limits conversation rounds)
-- System prompt: Guides the AI to use tools helpfully
-```
-
-### Example 2: Tool Chaining
-```bash
-> Read the README.md file and then search for recent updates about this project
-🔄 Round 1/5: Thinking...
-🔄 Round 1/5: Executing tools...
-  🛠️  file_reader: README.md
-🔄 Round 2/5: Thinking...
-🔄 Round 2/5: Executing tools...
-  🛠️  web_search: Pinloom CLI updates 2024
-🔄 Round 3/5: Thinking...
-✅ Complete!
-
-Based on the README and web search, here's what I found...
-```
-
-### Example 3: Calculation + Analysis
-```bash
-> Calculate the total lines in this directory and then search for similar projects
-🔄 Round 1/5: Thinking...
-🔄 Round 1/5: Executing tools...
-  🛠️  calculator: 25 + 42 + 18
-🔄 Round 2/5: Thinking...
-🔄 Round 2/5: Executing tools...
-  🛠️  web_search: AI CLI tool chaining projects
-🔄 Round 3/5: Thinking...
-✅ Complete!
-
-The total is 85 lines. Here are similar projects I found...
-```
 
 ## Configuration
 
@@ -119,13 +72,16 @@ Edit `config.json` to customize the demo:
 ## File Structure
 
 ```
-demo/
-├── tool-agent.py    # Main script (300 lines)
-├── config.json        # Configuration file
-└── README.md          # This file
+tool-agent/
+├── main.py              # Main entry point
+├── tool_agent.py         # ToolAgent class
+├── simple_tool.py       # Base tool class and implementations
+├── validate_tools.py   # Validation utilities
+├── config.json          # Configuration file
+└── README.md            # Documentation
 ```
 
-All functionality is contained in the single `tool-agent.py`.
+All functionality is contained in the modular files shown above.
 
 ## Command Reference
 
@@ -151,6 +107,26 @@ Arguments:
 2. **Argument** - Pass message as command line argument
 3. **Stdin** - Pipe input from other commands
 4. **File** - Redirect file content to stdin
+
+## Using as a Module
+
+Importing ToolAgent as a library in other programs:
+
+```python
+from tool_agent import ToolAgent
+from simple_tool import FileReaderTool, WebSearchTool
+
+# Create agent instance
+agent = ToolAgent("config.json")
+
+# Use programmatically
+response = agent.chat("Search for Python tutorials")
+print(response)
+
+# Access tools directly
+file_tool = FileReaderTool()
+content = file_tool.execute({"path": "example.txt"})
+```
 
 ## Extending the Demo
 
@@ -199,4 +175,4 @@ Then add it to the tools dictionary in `ToolAgent.__init__()`.
 
 ## License
 
-MIT 
+MIT

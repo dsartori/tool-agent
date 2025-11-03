@@ -11,18 +11,8 @@ import os
 import tempfile
 from typing import Dict, Tuple, Any
 
-# Note: Using importlib to handle the hyphenated filename
-import importlib.util
-import importlib
-
-spec = importlib.util.spec_from_file_location("tool_agent", "tool-agent.py")
-tool_agent_module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(tool_agent_module)
-
-FileReaderTool = tool_agent_module.FileReaderTool
-WebSearchTool = tool_agent_module.WebSearchTool
-WebFetchTool = tool_agent_module.WebFetchTool
-CalculatorTool = tool_agent_module.CalculatorTool
+# Import tools 
+from simple_tool import FileReaderTool, WebSearchTool, WebFetchTool, CalculatorTool
 
 
 class ToolValidator:
