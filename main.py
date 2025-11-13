@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Main entry point for ToolAgent CLI.
+Main entry point for Tool Agent CLI.
 """
 
 import sys
@@ -10,7 +10,7 @@ from tool_agent import ToolAgent
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="ToolAgent Demo - AI with Tool Chaining")
+    parser = argparse.ArgumentParser(description="Tool Agent Demo - AI with Tool Chaining")
     parser.add_argument("--config", default="config.json", help="Configuration file path")
     parser.add_argument("message", nargs="?", help="Message to send (if not provided, enters interactive mode)")
     

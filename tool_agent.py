@@ -9,8 +9,6 @@ Features: OpenAI integration, tool calls, round management, stdin input.
 import json
 import sys
 import os
-import subprocess
-import argparse
 from simple_tool import FileReaderTool, WebSearchTool, WebFetchTool, CalculatorTool
 from typing import Dict, List, Any, Optional
 try:
