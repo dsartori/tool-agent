@@ -1,4 +1,4 @@
-# Tool Agent Demo - AI with Tool Chaining
+# ToolAgent Demo - AI with Tool Chaining
 
 A simple demonstration of AI tool chaining for Hackforge. This minimal CLI shows how AI agents use external tools to perform complex tasks through multi-round conversations.
 
@@ -62,7 +62,7 @@ Edit `config.json` to customize the demo:
 
 ```json
 {
-  "model": "gpt-3.5-turbo",           // LLM to use
+  "model": "gpt-oss-20b",           // LLM to use
   "temperature": 0.7,                  // 0.0 = deterministic, 1.0 = creative
   "system_prompt": "You are...",       // AI behavior instructions
   "max_rounds": 5                      // Maximum conversation rounds

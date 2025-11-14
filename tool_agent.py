@@ -9,7 +9,6 @@ Features: OpenAI integration, tool calls, round management, stdin input.
 import json
 import sys
 import os
-import argparse
 from simple_tool import FileReaderTool, WebSearchTool, WebFetchTool, CalculatorTool
 from typing import Dict, List, Any, Optional
 try:
@@ -66,29 +65,6 @@ class ToolAgent:
         """Show progress indicator."""
         print(f"🔄 Round {round_num}/{self.max_rounds}: {message}")
     
-    def _detect_tool_call_loop(self, tool_calls: List[Dict], history: List[List[Dict]]) -> bool:
-        """Simple loop detection for repeated tool calls."""
-        if len(history) < 2:
-            return False
-        
-        # Check if the same tool call pattern is repeating
-        recent_calls = history[-1] if history else []
-        if not recent_calls:
-            return False
-        
-        # Compare with the round before last
-        if len(history) >= 3:
-            earlier_calls = history[-3]
-            if len(recent_calls) == len(earlier_calls):
-                for i, call in enumerate(recent_calls):
-                    if i < len(earlier_calls):
-                        current_name = call.get("function", {}).get("name")
-                        earlier_name = earlier_calls[i].get("function", {}).get("name")
-                        if current_name != earlier_name:
-                            return False
-                return True
-        
-        return False
     
     def _execute_tool_calls(self, tool_calls: List[Dict]) -> List[Dict[str, Any]]:
         """Execute tool calls and return results."""
@@ -134,26 +110,30 @@ class ToolAgent:
         ]
         
         tool_schemas = [tool.get_schema() for tool in self.tools.values()]
-        tool_call_history = []
         
         for round_num in range(1, self.max_rounds + 1):
             self.current_round = round_num
             
-            # Get response from OpenAI
             self._show_progress(round_num, "Thinking...")
             
             try:
+                # Call OpenAI Chat Completions API with tool support
                 response = self.client.chat.completions.create(
-                    model=self.config["model"],
-                    messages=messages,
-                    temperature=self.config["temperature"],
-                    tools=tool_schemas,
-                    tool_choice="auto"
+                    model=self.config["model"],           # AI model to use (e.g., gpt-4, gpt-3.5-turbo)
+                    messages=messages,                    # Conversation history as list of message dicts
+                    temperature=self.config["temperature"], # Randomness (0.0-2.0, lower = more deterministic)
+                    tools=tool_schemas,                   # Available tools in OpenAI function calling format
+                    tool_choice="auto"                    # Let AI decide whether to call tools ("auto", "none", or specific tool)
                 )
             except Exception as e:
                 return f"Error calling OpenAI API: {str(e)}"
             
+            # Extract the first choice from the response
+            # choices is a list of response alternatives (usually just one)
             choice = response.choices[0]
+            
+            # Get the message object containing the AI's response
+            # message contains content, role, and potentially tool_calls
             message_obj = choice.message
             
             # Add assistant response to messages
@@ -162,28 +142,23 @@ class ToolAgent:
                 "content": message_obj.content or ""
             }
             
+            # Check if the AI wants to call any tools
+            # tool_calls is a list of ToolCall objects when the AI decides to use tools
             if hasattr(message_obj, 'tool_calls') and message_obj.tool_calls:
+                # Convert tool_calls to the expected format for message history
+                # Each tool_call has: id, type, and function (name + arguments)
                 assistant_message["tool_calls"] = [
                     {
-                        "id": tc.id,
-                        "type": tc.type,
+                        "id": tc.id,           # Unique identifier for this tool call
+                        "type": tc.type,       # Always "function" for function calls
                         "function": {
-                            "name": tc.function.name,
-                            "arguments": tc.function.arguments
+                            "name": tc.function.name,        # Name of the function to call
+                            "arguments": tc.function.arguments # JSON string of arguments
                         }
                     }
                     for tc in message_obj.tool_calls
                 ]
                 
-                # Check for loops before executing
-                if self._detect_tool_call_loop(assistant_message["tool_calls"], tool_call_history):
-                    messages.append({
-                        "role": "system",
-                        "content": "Stop repeating the same tool calls. Provide a response based on the information you already have."
-                    })
-                    continue
-                
-                tool_call_history.append(assistant_message["tool_calls"])
                 messages.append(assistant_message)
                 
                 # Execute tools

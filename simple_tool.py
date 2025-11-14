@@ -3,16 +3,8 @@
 Simple Tool classes for ToolAgent.
 """
 
-import json
 import os
 from typing import Dict, Any
-
-try:
-    from openai import OpenAI
-except ImportError:
-    print("Error: openai package not found. Install with: pip install openai")
-    exit(1)
-
 
 class SimpleTool:
     """Base class for simple tools."""
