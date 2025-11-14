@@ -57,8 +57,7 @@ class ToolAgent:
         return {
             "model": "moonshotai/Kimi-K2-Instruct",
             "temperature": 0.7,
-            "system_prompt": "You are a helpful AI assistant with access to tools. Use tools when helpful to provide accurate, current information. If you have already provided a complete answer and no new information is available, respond with exactly '' to signal completion. Do not repeat the same answer multiple times."
-,
+            "system_prompt": "You are a helpful AI assistant with access to tools. Use tools when helpful to provide accurate, current information. If you have already provided a complete answer and no new information is available, respond with exactly '' to signal completion. Do not repeat the same answer multiple times.",
             "max_rounds": 5
         }
     
