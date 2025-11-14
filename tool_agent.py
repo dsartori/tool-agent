@@ -57,7 +57,8 @@ class ToolAgent:
         return {
             "model": "moonshotai/Kimi-K2-Instruct",
             "temperature": 0.7,
-            "system_prompt": "You are a helpful AI assistant with access to tools. Use tools when helpful to provide accurate, current information.",
+            "system_prompt": "You are a helpful AI assistant with access to tools. Use tools when helpful to provide accurate, current information. If you have already provided a complete answer and no new information is available, respond with exactly '' to signal completion. Do not repeat the same answer multiple times."
+,
             "max_rounds": 5
         }
     
@@ -177,13 +178,19 @@ class ToolAgent:
                 # Continue to next round
                 continue
             else:
-                # No tool calls, final response
+                # No tool calls
                 messages.append(assistant_message)
-                print(f"✅ Complete!")
-                return message_obj.content or "No response"
+                print(f"🤖 Response: {message_obj.content}")
+                if not message_obj.content:
+                    # Only terminate if there's literally no content
+                    return "No response"
         
         # Max rounds reached
-        return f"⚠️  Maximum rounds ({self.max_rounds}) reached. Here's what I found so far."
+        final_content = assistant_message.get("content", "")
+        if final_content:
+            return final_content + f"\n\n⚠️  Maximum rounds ({self.max_rounds}) reached."
+        else:
+            return f"⚠️  Maximum rounds ({self.max_rounds}) reached. No final response generated."
     
     def run_interactive(self):
         """Run interactive CLI mode."""
